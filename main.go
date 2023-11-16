@@ -21,16 +21,15 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 }
 func formHandler(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/form" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
+	if err := r.ParseForm(); err != nil {
+		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
 	}
-	if r.Method != "POST" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
-	r.ParseForm()
-	fmt.Fprintf(w, "Hello %s!", r.FormValue("name\t")+r.FormValue("address"))
+	fmt.Fprintf(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
+	name := r.FormValue("name")
+	address := r.FormValue("address")
+	fmt.Fprintf(w, "Name = %s\n", name)
+	fmt.Fprintf(w, "Address = %s\n", address)
 
 }
 
